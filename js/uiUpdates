@@ -1,0 +1,165 @@
+function updateMinimumAmount() {
+    const minAmount = calculateMinimumInputAmount(currentFromToken, currentToToken);
+    document.getElementById('minAmount').textContent =
+        `Minimum input: ${minAmount.toFixed(6)} ${currentFromToken.symbol} (including ${FEE_PERCENTAGE}% fee)`;
+}
+
+function updateEstimatedAmount() {
+    const amount = parseFloat(document.getElementById('amount').value);
+    if (!isNaN(amount)) {
+        const estimatedAmount = calculateSwapAmount(currentFromToken, currentToToken, amount);
+        const existingEstimate = document.querySelector('.estimated-amount');
+        if (existingEstimate) {
+            existingEstimate.textContent = `Estimated amount: ${estimatedAmount.toFixed(6)} ${currentToToken.symbol}`;
+        } else {
+            const estimate = document.createElement('div');
+            estimate.className = 'estimated-amount';
+            estimate.textContent = `Estimated amount: ${estimatedAmount.toFixed(6)} ${currentToToken.symbol}`;
+            document.getElementById('amount').parentNode.appendChild(estimate);
+        }
+    }
+}
+
+function updateLiquidityInfo() {
+    const liquidityAmount = LIQUIDITY_POOL[currentToToken.symbol] || 0;
+    const existingInfo = document.querySelector('.liquidity-info');
+    const newContent = `Available liquidity: ${liquidityAmount.toLocaleString()} ${currentToToken.symbol}`;
+
+    if (existingInfo) {
+        if (existingInfo.textContent !== newContent) {
+            existingInfo.textContent = newContent;
+            existingInfo.classList.add('updated');
+            setTimeout(() => existingInfo.classList.remove('updated'), 2000);
+        }
+    } else {
+        const info = document.createElement('div');
+        info.className = 'liquidity-info';
+        info.textContent = newContent;
+        document.getElementById('toToken').parentNode.appendChild(info);
+    }
+}
+
+function setupTokenSelect(buttonId, dropdownId, isToDropdown) {
+    const button = document.getElementById(buttonId);
+    const dropdown = document.getElementById(dropdownId);
+
+    button.addEventListener('click', () => {
+        dropdown.classList.toggle('active');
+    });
+
+    let tokens = Object.values(TOKENS);
+    if (isToDropdown) {
+        tokens = tokens.filter(token => (LIQUIDITY_POOL[token.symbol] || 0) >= 2);
+    }
+
+    dropdown.innerHTML = '';
+    tokens.forEach(token => {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        item.innerHTML = `
+            <img src="${token.imageUrl}" alt="${token.symbol}">
+            <span>${token.symbol}</span>
+        `;
+        item.addEventListener('click', () => {
+            if (isToDropdown) {
+                currentToToken = token;
+            } else {
+                currentFromToken = token;
+            }
+            button.innerHTML = `
+                <div class="token-info">
+                    <img src="${token.imageUrl}" alt="${token.symbol}">
+                    <span>${token.symbol}</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6"/>
+                </svg>
+            `;
+            dropdown.classList.remove('active');
+            updateMinimumAmount();
+            updateLiquidityInfo();
+            updateEstimatedAmount();
+        });
+        dropdown.appendChild(item);
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+}
+
+function showSwapResult(amount, estimatedAmount, walletAddress) {
+    const swapForm = document.getElementById('swapForm');
+    const swapResult = document.getElementById('swapResult');
+
+    swapForm.style.display = 'none';
+    swapResult.style.display = 'block';
+    swapResult.innerHTML = `
+        <h2>Swap Initiated</h2>
+        <p>You are swapping ${amount} ${currentFromToken.symbol} for approximately ${estimatedAmount.toFixed(6)} ${currentToToken.symbol}.</p>
+        <p>Please send ${amount} ${currentFromToken.symbol} to the following address:</p>
+        <div class="wallet-address">
+            <span id="swapWalletAddress">${SWAP_WALLET}</span>
+            <button class="copy-button" onclick="handleCopy()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="qrcode" class="qr-code"></div>
+        <p>After sending, please enter your transaction ID to verify the swap:</p>
+        <input type="text" id="transactionId" placeholder="Enter transaction ID">
+        <button onclick="verifyTransaction()" class="submit-button">Verify Transaction</button>
+        <button onclick="backToSwap()" class="back-button">Back to Swap</button>
+        <a href="${DISCORD_URL}" target="_blank" rel="noopener noreferrer" class="discord-link">
+            Need help? Join our Discord
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"></path>
+            </svg>
+        </a>
+    `;
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: SWAP_WALLET,
+        width: 128,
+        height: 128
+    });
+}
+
+function showVerificationMessage(isSuccess) {
+    const swapResult = document.getElementById('swapResult');
+    const message = isSuccess
+        ? '<h2>Verification Successful</h2><p>Your transaction has been verified. Thank you for using GlyphSwap!</p>'
+        : '<h2>Verification Failed</h2><p>We could not verify your transaction. Please check your transaction ID and try again.</p>';
+    
+    swapResult.innerHTML = `
+        ${message}
+        <button onclick="backToSwap()" class="submit-button">Back to Swap</button>
+    `;
+}
+
+function handleCopy() {
+    const walletAddress = document.getElementById('swapWalletAddress');
+    navigator.clipboard.writeText(walletAddress.textContent).then(() => {
+        const successMessage = document.createElement('div');
+        successMessage.className = 'success-message';
+        successMessage.textContent = 'Copied to clipboard!';
+        walletAddress.parentNode.appendChild(successMessage);
+        setTimeout(() => successMessage.remove(), 2000);
+    });
+}
+
+function backToSwap() {
+    document.getElementById('swapForm').style.display = 'block';
+    document.getElementById('swapResult').style.display = 'none';
+    document.getElementById('swapForm').reset();
+    const existingEstimate = document.querySelector('.estimated-amount');
+    if (existingEstimate) {
+        existingEstimate.remove();
+    }
+    updateMinimumAmount();
+    updateLiquidityInfo();
+}
