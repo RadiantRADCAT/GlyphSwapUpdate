@@ -1,0 +1,155 @@
+body {
+    overflow-y: auto;
+    font-family: 'Red Hat Display', Arial, sans-serif;
+    background-image: url('https://static.wixstatic.com/media/c0fd9f_7a29e6d3a40f4821a14dbe8f93b9d069~mv2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 480px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin-bottom: 50px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #111827;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.header h1 img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.header h1 span {
+    font-weight: 700;
+}
+
+.beta-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1E40AF;
+    background-color: #DBEAFE;
+    padding: 4px 8px;
+    border-radius: 9999px;
+}
+
+.token-select {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.token-select label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6B7280;
+    margin-bottom: 8px;
+}
+
+.select-button {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    font-family: 'Red Hat Display', Arial, sans-serif;
+}
+
+.select-button:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #FFAD33;
+}
+
+.token-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.token-info img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    margin-top: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.dropdown.active {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: 'Red Hat Display', Arial, sans-serif;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.dropdown-item img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+input {
+    width: 
