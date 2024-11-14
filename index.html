@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlyphSwap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <img src="https://static.wixstatic.com/media/c0fd9f_cfacf9e215804e3a8ad37a1f5e0d3f11~mv2.png" alt="GlyphSwap Logo">
+                <span>GlyphSwap</span>
+            </h1>
+            <div class="beta-label">Beta</div>
+        </div>
+
+        <form id="swapForm">
+            <div class="token-select">
+                <label>From</label>
+                <button type="button" class="select-button" id="fromToken">
+                    <div class="token-info">
+                        <img src="https://static.wixstatic.com/media/c0fd9f_33dd965b95d54dfe9af12ed99fe5c43a~mv2.png" alt="RXD">
+                        <span>RXD</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="dropdown" id="fromTokenDropdown"></div>
+            </div>
+
+            <div class="input-group">
+                <input type="number" id="amount" placeholder="0.0" min="0" step="any" required>
+                <div id="minAmount" class="min-amount"></div>
+            </div>
+
+            <div class="token-select">
+                <label>To</label>
+                <button type="button" class="select-button" id="toToken">
+                    <div class="token-info">
+                        <img src="https://static.wixstatic.com/media/c0fd9f_c2c4b7bf64464273a2cf3e30d08a9692~mv2.png" alt="RADCAT">
+                        <span>RADCAT</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </button>
+                <div class="dropdown" id="toTokenDropdown"></div>
+            </div>
+
+            <div class="input-group">
+                <label>Your Photonic Wallet Address</label>
+                <input type="text" id="walletAddress" placeholder="Enter your wallet address" required>
+            </div>
+
+            <button type="submit" class="submit-button">Swap Tokens</button>
+        </form>
+
+        <div id="swapResult" style="display: none;"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/tokens.js"></script>
+    <script src="js/swapLogic.js"></script>
+    <script src="js/uiUpdates.js"></script>
+    <script src="js/apiCalls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
