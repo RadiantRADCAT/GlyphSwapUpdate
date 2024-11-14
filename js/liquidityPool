@@ -1,13 +1,10 @@
-let LIQUIDITY_POOL = {};
+let liquidityPool = {};
 
 async function fetchLiquidityPool() {
     try {
         const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getLiquidityPool`);
-        const data = await response.json();
-        LIQUIDITY_POOL = data;
-        updateLiquidityInfo();
-        setupTokenSelect('fromToken', 'fromTokenDropdown', false);
-        setupTokenSelect('toToken', 'toTokenDropdown', true);
+        liquidityPool = await response.json();
+        updateAvailableLiquidity();
     } catch (error) {
         console.error('Error fetching liquidity pool:', error);
     }
