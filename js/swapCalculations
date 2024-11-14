@@ -11,14 +11,3 @@ function calculateMinimumInputAmount(fromToken, toToken) {
     const minAmountWithFee = minAmountBeforeFee * (100 / (100 - FEE_PERCENTAGE));
     return minAmountWithFee;
 }
-
-function validateSwapAmount(amount) {
-    const estimatedAmount = calculateSwapAmount(currentFromToken, currentToToken, amount);
-    const availableLiquidity = LIQUIDITY_POOL[currentToToken.symbol] || 0;
-
-    if (estimatedAmount > availableLiquidity * 0.5) {
-        return false;
-    }
-
-    return estimatedAmount >= 1;
-}
